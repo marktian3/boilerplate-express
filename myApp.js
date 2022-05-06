@@ -2,6 +2,7 @@ let express = require('express');
 let app = express();
 let path = require('path'); 
 let dotenv = require('dotenv').config(); 
+const bodyParser = require('body-parser'); 
 
 
 
@@ -15,6 +16,8 @@ app.use((req, res, next) => {
   console.log(req.method + " " + req.path + " - " + req.ip); 
   next(); 
 })
+
+app.use(bodyParser.urlencoded({extended: false}));
 
 app.get('/', (req, res) => {
   absolutePath = __dirname + '/views/index.html'; 
@@ -37,6 +40,22 @@ app.get('/now', (req, res, next) => {
 }, (req, res) => {
   res.send({"time": req.time}); 
 })
+
+app.get('/:word/echo', (req, res) => {
+  res.send({"echo": req.params.word}); 
+})
+
+app.get('/name', (req, res) => {
+  console.log(req.query); 
+  res.send({"name" : req.query.first + " " + req.query.last}); 
+})
+
+app.post('/name', (req, res) => {
+  res.send({name: req.body.first + " " + req.body.last});
+})
+
+
+
 
 
 
